@@ -14,53 +14,52 @@ class Calculator:
     def remainder(self):
         return self.limit - self.get_today_stats()
 
-    '''сохраняет новую запись о расходах.'''
+    """сохраняет новую запись о расходах."""
     def add_record(self, record):
         self.records.append(record)
 
-    '''считает сколько денег потрачено сегодня.'''
+    """считает сколько денег потрачено сегодня."""
     def get_today_stats(self):
-        return sum([record.amount for record in self.records if record.date == dt.datetime.now().date()])
+        return (sum([record.amount for record in self.records
+                    if record.date == dt.datetime.now().date()]))
 
-    '''считает сколько денег потрачено за последние 7 дней.'''
+    """считает сколько денег потрачено за последние 7 дней."""
     def get_week_stats(self):
         week_ago = dt.datetime.now().date() - dt.timedelta(days=7)
-        return sum([record.amount for record in self.records if week_ago <= record.date <= dt.datetime.now().date()])
-
-    '''определяет, сколько ещё калорий можно/нужно получить сегодня.'''
+        return (sum([record.amount for record in self.records
+                    if week_ago <= record.date <= dt.datetime.now().date()]))
 
 
 class CaloriesCalculator(Calculator):
 
+    """определяет, сколько ещё калорий можно/нужно получить сегодня"""
     def get_calories_remained(self):
-        if self.get_today_stats() < self.limit:
+        if self.remainder() > 0:
             return (f'Сегодня можно съесть что-нибудь ещё, но с '
                     f'общей калорийностью не более {self.remainder()} кКал')
-        else:
-            return 'Хватит есть!'
+        return 'Хватит есть!'
 
 
 class CashCalculator(Calculator):
+    RUB_RATE = 1
     USD_RATE = 70.00
     EURO_RATE = 80.00
 
-    '''определяет, сколько ещё денег можно потратить сегодня в руб., долларах или евро.'''
+    """определяет, сколько ещё денег можно потратить сегодня в руб., долларах или евро"""
     def get_today_cash_remained(self, currency):
+        conversion_currency = {
+                'eur': ('Euro', self.EURO_RATE),
+                'usd': ('USD', self.USD_RATE),
+                'rub': ('руб', self.RUB_RATE)}
         balance = self.remainder()
-        conversion_currency = dict()
-        conversion_currency['usd'] = (abs(round(balance / CashCalculator.USD_RATE, 2)), 'USD')
-        conversion_currency['eur'] = (abs(round(balance / CashCalculator.EURO_RATE, 2)), 'Euro')
-        conversion_currency['rub'] = (abs(balance), 'руб')
-
-        if currency in conversion_currency.keys():
-            if self.remainder() > 0:
-                return (f'На сегодня осталось '
-                        f'{conversion_currency[currency][0]} {conversion_currency[currency][1]}')
-            elif self.remainder() == 0:
-                return f'Денег нет, держись'
-            elif self.remainder() < 0:
-                return (f'Денег нет, держись: твой долг -'
-                        f' {conversion_currency[currency][0]} {conversion_currency[currency][1]}')
+        if balance == 0:
+            return f'Денег нет, держись'
+        conversion_key, conversion_value = conversion_currency[currency]
+        conversion_round = (round(balance / conversion_value, 2))
+        if balance > 0:
+            return f'На сегодня осталось {conversion_round} {conversion_key}'
+        return (f'Денег нет, держись: твой долг -'
+                f' {abs(conversion_round)} {conversion_key}')
 
 
 class Record:
@@ -77,10 +76,10 @@ class Record:
 
 
 if __name__ == '__main__':
-    '''создан объект CashCalculator с лимитом 1000.'''
+    """создан объект CashCalculator с лимитом 1000"""
     cash_calculator = CashCalculator(1000)
 
-    '''создан объект CaloriesCalculator с лимитом 2000.'''
+    """создан объект CaloriesCalculator с лимитом 2000"""
     calories_calculator = CaloriesCalculator(2000)
 
     cash_calculator.add_record(Record(600,"Безудержный шопинг"))
