@@ -15,16 +15,16 @@ class Calculator:
         return self.limit - self.get_today_stats()
 
     def add_record(self, record):
-        """сохраняет новую запись о расходах"""
+        """сохраняет новую запись о расходах."""
         self.records.append(record)
 
     def get_today_stats(self):
-        """считает сколько денег потрачено сегодня"""
+        """считает сколько денег потрачено сегодня."""
         return (sum([record.amount for record in self.records
                     if record.date == dt.datetime.now().date()]))
 
     def get_week_stats(self):
-        """считает сколько денег потрачено за последние 7 дней"""
+        """считает сколько денег потрачено за последние 7 дней."""
         week_ago = dt.datetime.now().date() - dt.timedelta(days=7)
         return (sum([record.amount for record in self.records
                     if week_ago <= record.date <= dt.datetime.now().date()]))
@@ -33,7 +33,7 @@ class Calculator:
 class CaloriesCalculator(Calculator):
 
     def get_calories_remained(self):
-        """определяет, сколько ещё калорий можно/нужно получить сегодня"""
+        """определяет, сколько ещё калорий можно/нужно получить сегодня."""
         today_remainder = self.remainder()
         if today_remainder > 0:
             return (f'Сегодня можно съесть что-нибудь ещё, но с '
@@ -47,7 +47,9 @@ class CashCalculator(Calculator):
     EURO_RATE = 80.00
 
     def get_today_cash_remained(self, currency):
-        """определяет, сколько ещё денег можно потратить сегодня в руб.,$ или евро"""
+        """определяет, сколько ещё денег можно
+        потратить сегодня в руб.,$ или евро.
+        """
         conversion_currency = {
                 'eur': ('Euro', self.EURO_RATE),
                 'usd': ('USD', self.USD_RATE),
@@ -81,10 +83,10 @@ if __name__ == '__main__':
     calories_calculator = CaloriesCalculator(2000)
 
     cash_calculator.add_record(Record(600,"Безудержный шопинг"))
-    cash_calculator.add_record(Record(1568, "Наполнение корзины", "27.06.2020"))
+    cash_calculator.add_record(Record(1568, "Еда", "27.06.2020"))
     cash_calculator.add_record(Record(300, "Катание на такси", "28.06.2020"))
 
-    calories_calculator.add_record(Record(1000, "Кусок тортика.", "24.06.2020"))
+    calories_calculator.add_record(Record(1000, "Кусок торта", "24.06.2020"))
     calories_calculator.add_record(Record(184, "Йогурт.", "23.06.2020"))
     calories_calculator.add_record(Record(1400, "Баночка чипсов."))
 
