@@ -15,16 +15,16 @@ class Calculator:
         return self.limit - self.get_today_stats()
 
     def add_record(self, record):
-        """сохраняет новую запись о расходах."""
+        """Сохраняет новую запись о расходах."""
         self.records.append(record)
 
     def get_today_stats(self):
-        """считает сколько денег потрачено сегодня."""
+        """Считает сколько денег потрачено сегодня."""
         return (sum([record.amount for record in self.records
                     if record.date == dt.datetime.now().date()]))
 
     def get_week_stats(self):
-        """считает сколько денег потрачено за последние 7 дней."""
+        """Считает сколько денег потрачено за последние 7 дней."""
         week_ago = dt.datetime.now().date() - dt.timedelta(days=7)
         return (sum([record.amount for record in self.records
                     if week_ago <= record.date <= dt.datetime.now().date()]))
@@ -33,7 +33,7 @@ class Calculator:
 class CaloriesCalculator(Calculator):
 
     def get_calories_remained(self):
-        """определяет, сколько ещё калорий можно/нужно получить сегодня."""
+        """Определяет, сколько ещё калорий можно/нужно получить сегодня."""
         today_remainder = self.remainder()
         if today_remainder > 0:
             return (f'Сегодня можно съесть что-нибудь ещё, но с '
@@ -47,7 +47,7 @@ class CashCalculator(Calculator):
     EURO_RATE = 80.00
 
     def get_today_cash_remained(self, currency):
-        """определяет, сколько ещё денег можно
+        """Определяет, сколько ещё денег можно
         потратить сегодня в руб.,$ или евро.
         """
         conversion_currency = {
