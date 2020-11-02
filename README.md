@@ -1,2 +1,2 @@
 # hw_python_oop
-Sprint 2. Итоговый проект.
+Calculator money and calorie created with the principles of OOP
